@@ -399,8 +399,8 @@ High Score: 0
 <!-- FOOTER -->
 
 <div id="bottom">
-★ This game was made by: 'RUDE PROJECTS'
-Click the download button at the top to play offline!
+★ This game was made by: 'RUDE PROJECTS.'
+Click the 'install game' button at the top to play offline!
 </div>
 
 <!-- MUSIC -->
@@ -699,22 +699,16 @@ loop();
 
 /* DOWNLOAD */
 
-document.getElementById("downloadBtn").onclick=()=>{
+document.getElementById("downloadBtn").onclick = () => {
 
-    const html=document.documentElement.outerHTML;
+    const a = document.createElement("a");
 
-    const blob=new Blob([html],{
+    a.href = "space dodge.zip";
 
-        type:"text/html"
-    });
-
-    const a=document.createElement("a");
-
-    a.href=URL.createObjectURL(blob);
-
-    a.download="space-dodge.html";
+    a.download = "space dodge.zip";
 
     a.click();
+
 };
 
 /* FULLSCREEN */
