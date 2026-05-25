@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>SPACE DODGE</title>
+
+<style>
+
+body{
+    margin:0;
+    background:black;
+    overflow:hidden;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+}
+
+/* STAR BACKGROUND */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+
+    background-image:
+    radial-gradient(white 1px, transparent 1px);
+
+    background-size:50px 50px;
+
+    opacity:.35;
+
+    z-index:-1;
+}
+
+/* MUSIC BUTTON */
+
+#musicBtn{
+
+    position:fixed;
+
+    top:15px;
+
+    left:15px;
+
+    z-index:9999;
+
+    background:black;
+
+    color:cyan;
+
+    border:2px solid cyan;
+
+    border-radius:12px;
+
+    padding:10px 16px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    box-shadow:0 0 12px cyan;
+}
+
+#musicBtn:hover{
+
+    transform:scale(1.05);
+}
+
+/* FULLSCREEN */
+
+#fullscreenBtn{
+
+    position:absolute;
+
+    top:8px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    border:1px solid #444;
+
+    padding:6px 14px;
+
+    border-radius:6px;
+
+    background:#111;
+
+    cursor:pointer;
+
+    font-size:12px;
+}
+
+#fullscreenBtn span{
+
+    background:#00bfff;
+
+    padding:2px 6px;
+
+    border-radius:4px;
+
+    color:black;
+
+    font-weight:bold;
+}
+
+/* DOWNLOAD */
+
+#downloadBtn{
+
+    position:absolute;
+
+    top:8px;
+
+    right:18px;
+
+    border:2px solid #ff00ff;
+
+    border-radius:16px;
+
+    padding:12px;
+
+    width:80px;
+
+    cursor:pointer;
+
+    background:#050505;
+
+    box-shadow:0 0 10px #00ffff;
+}
+
+#downloadBtn:hover{
+
+    transform:scale(1.05);
+}
+
+#downloadBtn div{
+
+    font-size:12px;
+
+    margin-top:4px;
+}
+
+/* TITLE */
+
+h1{
+
+    margin-top:28px;
+
+    color:#00e5ff;
+
+    font-size:58px;
+
+    text-shadow:0 0 20px cyan;
+}
+
+.instructions{
+
+    margin-top:-10px;
+
+    color:#ddd;
+
+    font-size:14px;
+}
+
+/* SCORES */
+
+#score{
+
+    margin-top:12px;
+
+    color:#00ffff;
+
+    font-size:20px;
+
+    font-weight:bold;
+}
+
+#highscore{
+
+    color:#ff4dff;
+
+    font-size:20px;
+
+    font-weight:bold;
+}
+
+/* MAIN */
+
+#container{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:flex-start;
+
+    gap:40px;
+
+    margin-top:10px;
+}
+
+/* PANELS */
+
+.panel{
+
+    border:3px solid #00e5ff;
+
+    width:180px;
+
+    min-height:100px;
+
+    padding:10px;
+
+    box-shadow:0 0 12px cyan;
+}
+
+.panel h3{
+
+    margin-top:0;
+}
+
+/* GAME */
+
+canvas{
+
+    background:#000016;
+
+    border:3px solid #00e5ff;
+
+    box-shadow:0 0 20px cyan;
+}
+
+/* DIFFICULTY */
+
+.diffBtn{
+
+    border:3px solid red;
+
+    background:black;
+
+    color:red;
+
+    border-radius:999px;
+
+    padding:6px 14px;
+
+    margin:5px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.selected{
+
+    border-color:#00ff00;
+
+    color:#00ff00;
+
+    box-shadow:0 0 10px #00ff00;
+}
+
+/* GLOBAL */
+
+#global{
+
+    color:#ff4dff;
+
+    font-size:42px;
+
+    font-weight:bold;
+}
+
+#globalText{
+
+    margin-top:12px;
+
+    font-size:12px;
+
+    line-height:20px;
+}
+
+/* FOOTER */
+
+#bottom{
+
+    width:70%;
+
+    margin:auto;
+
+    margin-top:18px;
+
+    border:2px solid #ff00ff;
+
+    border-radius:12px;
+
+    padding:10px;
+
+    box-shadow:0 0 12px cyan;
+
+    color:#ddd;
+
+    font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC BUTTON -->
+
+<button id="musicBtn">
+🔊 MUSIC OFF
+</button>
+
+<!-- FULLSCREEN -->
+
+<div id="fullscreenBtn">
+Press <span>F11</span> for fullscreen
+</div>
+
+<!-- DOWNLOAD -->
+
+<div id="downloadBtn">
+⬇
+<div>Install Game</div>
+</div>
+
+<!-- TITLE -->
+
+<h1>SPACE DODGE</h1>
+
+<div class="instructions">
+Move with LEFT and RIGHT arrow keys! (Mobile is not supported, sorry)
+</div>
+
+<div id="score">
+Score: 0
+</div>
+
+<div id="highscore">
+High Score: 0
+</div>
+
+<!-- MAIN -->
+
+<div id="container">
+
+    <!-- LEFT -->
+
+    <div class="panel">
+
+        <h3>Manual Difficulty set:</h3>
+
+        <button class="diffBtn selected" id="easy">
+            EZ
+        </button>
+
+        <button class="diffBtn" id="normal">
+            Nor
+        </button>
+
+        <button class="diffBtn" id="hard">
+            Hard
+        </button>
+
+    </div>
+
+    <!-- GAME -->
+
+    <canvas id="game" width="520" height="340"></canvas>
+
+    <!-- RIGHT -->
+
+    <div>
+
+        <div class="panel">
+
+            <h3>Global score:</h3>
+
+            <div id="global">
+                78542
+            </div>
+
+        </div>
+
+        <div id="globalText">
+            Put the highest score somebody<br>
+            has reached <span style="color:#ff00ff">GLOBALLY</span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div id="bottom">
+★ This game was made by: 'RUDE PROJECTS'
+Click the download button at the top to play offline!
+</div>
+
+<!-- MUSIC -->
+
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* MUSIC */
+
+const music = document.getElementById("bgMusic");
+
+const musicBtn = document.getElementById("musicBtn");
+
+music.volume = 0.35;
+
+let musicPlaying = false;
+
+musicBtn.onclick = async () => {
+
+    if(!musicPlaying){
+
+        try{
+
+            await music.play();
+
+            musicBtn.innerText = "🔇 MUSIC ON";
+
+            musicPlaying = true;
+
+        }catch(err){
+
+            console.log(err);
+        }
+
+    }else{
+
+        music.pause();
+
+        musicBtn.innerText = "🔊 MUSIC OFF";
+
+        musicPlaying = false;
+    }
+};
+
+/* GAME */
+
+const canvas = document.getElementById("game");
+
+const ctx = canvas.getContext("2d");
+
+const scoreText = document.getElementById("score");
+
+const highText = document.getElementById("highscore");
+
+let player = {
+
+    x:240,
+
+    y:300,
+
+    w:40,
+
+    h:12,
+
+    speed:7
+};
+
+let keys = {};
+
+let blocks = [];
+
+let score = 0;
+
+let high = localStorage.getItem("spaceHigh") || 0;
+
+highText.innerText = "High Score: " + high;
+
+/* DIFFICULTY */
+
+let difficultyMultiplier = 1;
+
+let spawnRate = 700;
+
+window.addEventListener("keydown", e=>{
+
+    keys[e.key]=true;
+});
+
+window.addEventListener("keyup", e=>{
+
+    keys[e.key]=false;
+});
+
+/* DIFFICULTY */
+
+function setDifficulty(mode){
+
+    document.querySelectorAll(".diffBtn").forEach(btn=>{
+
+        btn.classList.remove("selected");
+    });
+
+    if(mode==="easy"){
+
+        difficultyMultiplier=.8;
+
+        spawnRate=900;
+
+        easy.classList.add("selected");
+    }
+
+    if(mode==="normal"){
+
+        difficultyMultiplier=1;
+
+        spawnRate=700;
+
+        normal.classList.add("selected");
+    }
+
+    if(mode==="hard"){
+
+        difficultyMultiplier=1.8;
+
+        spawnRate=350;
+
+        hard.classList.add("selected");
+    }
+
+    clearInterval(window.spawnLoop);
+
+    window.spawnLoop=setInterval(spawnBlock,spawnRate);
+}
+
+easy.onclick=()=>setDifficulty("easy");
+
+normal.onclick=()=>setDifficulty("normal");
+
+hard.onclick=()=>setDifficulty("hard");
+
+/* SPAWN */
+
+function spawnBlock(){
+
+    blocks.push({
+
+        x:Math.random()*(canvas.width-20),
+
+        y:-20,
+
+        size:15+Math.random()*20,
+
+        speed:(2+score/250)*difficultyMultiplier
+    });
+}
+
+/* RESET */
+
+function resetGame(){
+
+    if(score>high){
+
+        high=score;
+
+        localStorage.setItem("spaceHigh",high);
+
+        highText.innerText="High Score: "+high;
+    }
+
+    alert("GAME OVER\nScore: "+score);
+
+    score=0;
+
+    blocks=[];
+}
+
+/* UPDATE */
+
+function update(){
+
+    if(keys["ArrowLeft"]){
+
+        player.x-=player.speed;
+    }
+
+    if(keys["ArrowRight"]){
+
+        player.x+=player.speed;
+    }
+
+    if(player.x<0){
+
+        player.x=0;
+    }
+
+    if(player.x+player.w>canvas.width){
+
+        player.x=canvas.width-player.w;
+    }
+
+    for(let block of blocks){
+
+        block.y+=block.speed;
+
+        if(
+
+            block.x<player.x+player.w &&
+
+            block.x+block.size>player.x &&
+
+            block.y<player.y+player.h &&
+
+            block.y+block.size>player.y
+
+        ){
+
+            resetGame();
+        }
+    }
+
+    blocks=blocks.filter(
+
+        b=>b.y<canvas.height+50
+    );
+
+    score++;
+
+    scoreText.innerText="Score: "+score;
+}
+
+/* DRAW */
+
+function draw(){
+
+    ctx.clearRect(
+
+        0,
+        0,
+
+        canvas.width,
+        canvas.height
+    );
+
+    /* PLAYER */
+
+    ctx.fillStyle="#00ffff";
+
+    ctx.fillRect(
+
+        player.x,
+        player.y,
+
+        player.w,
+        player.h
+    );
+
+    /* BLOCKS */
+
+    ctx.fillStyle="#ff00ff";
+
+    for(let block of blocks){
+
+        ctx.fillRect(
+
+            block.x,
+            block.y,
+
+            block.size,
+            block.size
+        );
+    }
+}
+
+/* LOOP */
+
+function loop(){
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(loop);
+}
+
+window.spawnLoop=setInterval(
+
+    spawnBlock,
+
+    spawnRate
+);
+
+loop();
+
+/* DOWNLOAD */
+
+document.getElementById("downloadBtn").onclick=()=>{
+
+    const html=document.documentElement.outerHTML;
+
+    const blob=new Blob([html],{
+
+        type:"text/html"
+    });
+
+    const a=document.createElement("a");
+
+    a.href=URL.createObjectURL(blob);
+
+    a.download="space-dodge.html";
+
+    a.click();
+};
+
+/* FULLSCREEN */
+
+document.getElementById("fullscreenBtn").onclick=()=>{
+
+    document.documentElement.requestFullscreen();
+};
+
+</script>
+
+</body>
+</html>
